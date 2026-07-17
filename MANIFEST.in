@@ -1,0 +1,13 @@
+include README.md
+include CHANGELOG.md
+include CONTRIBUTING.md
+include LICENSE_SELECTION_REQUIRED.md
+include PUBLIC_RELEASE_MANIFEST.md
+include PUBLISHING_CHECKLIST.md
+include CITATION.cff.template
+include .github/workflows/tests.yml
+recursive-include examples *.jsonl *.md
+recursive-include tests *.py
+recursive-include src/cxr_ldc_eval/config *.json
+recursive-include src/cxr_ldc_eval/docs *.md
+global-exclude *.py[cod] *.orig *.rej

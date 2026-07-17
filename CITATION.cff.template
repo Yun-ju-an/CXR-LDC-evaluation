@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use CXR LDC Eval, please cite the associated paper and software release."
+title: "CXR LDC Eval"
+type: software
+version: 0.1.1
+date-released: "YYYY-MM-DD"
+authors:
+  - family-names: "REPLACE"
+    given-names: "REPLACE"
+repository-code: "https://github.com/REPLACE/REPLACE"
+url: "https://github.com/REPLACE/REPLACE"
+license: "REPLACE_AFTER_RIGHTS_REVIEW"

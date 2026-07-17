@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+*.orig
+*.rej
+build/
+dist/
+*.egg-info/
+.coverage
+htmlcov/
+eval_results/
+*_longitudinal_claims_*.json

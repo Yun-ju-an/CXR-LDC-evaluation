@@ -1,0 +1,1270 @@
+{
+  "metadata": {
+    "name": "CXR longitudinal disease-change evaluation config",
+    "version": "0.1.1",
+    "protocol_amendments": [
+      "Location-conditioned broad 'what has changed' questions route to the level profile.",
+      "Question routing, scored transition values, and projection mappings are code-consumed config."
+    ],
+    "created_for": "dataset- and model-independent longitudinal CXR VQA answer-text evaluation"
+  },
+  "labels": {
+    "atelectasis": {
+      "display_name": "atelectasis",
+      "aliases": [
+        "atelectasis",
+        "subsegmental atelectasis",
+        "linear atelectasis",
+        "basilar atelectasis",
+        "bibasilar atelectasis"
+      ],
+      "group": "airspace_parenchymal",
+      "chexpert_projection": "atelectasis",
+      "eval_tier": "primary_cxr",
+      "cxr_verifiability": "direct_or_report_verifiable",
+      "notes": "CXR-visible finding; can overlap with lung_opacity umbrella."
+    },
+    "pleural_effusion": {
+      "display_name": "pleural effusion",
+      "aliases": [
+        "pleural effusion",
+        "effusion",
+        "pleural fluid",
+        "fluid in pleural space"
+      ],
+      "group": "pleural",
+      "chexpert_projection": "pleural_effusion",
+      "eval_tier": "primary_cxr",
+      "cxr_verifiability": "direct_or_report_verifiable",
+      "notes": "Costophrenic angle blunting may be indirect/related but is kept as separate label."
+    },
+    "lung_opacity": {
+      "display_name": "lung opacity",
+      "aliases": [
+        "lung opacity",
+        "pulmonary opacity",
+        "airspace opacity",
+        "parenchymal opacity",
+        "opacity",
+        "opacification",
+        "infiltrate",
+        "pulmonary infiltrate"
+      ],
+      "group": "airspace_parenchymal",
+      "chexpert_projection": "lung_opacity",
+      "eval_tier": "primary_cxr",
+      "cxr_verifiability": "direct_or_report_verifiable",
+      "notes": "Umbrella parent label; should not be allowed to double-match multiple child diseases in one-to-many fashion."
+    },
+    "edema": {
+      "display_name": "edema",
+      "aliases": [
+        "edema",
+        "pulmonary edema",
+        "interstitial edema",
+        "alveolar edema"
+      ],
+      "group": "edema_congestion",
+      "chexpert_projection": "edema",
+      "eval_tier": "primary_cxr",
+      "cxr_verifiability": "direct_or_report_verifiable",
+      "notes": "CXR-visible edema finding; related to congestion and heart failure but not identical."
+    },
+    "cardiomegaly": {
+      "display_name": "cardiomegaly",
+      "aliases": [
+        "cardiomegaly",
+        "enlarged heart",
+        "cardiac enlargement",
+        "mild cardiomegaly",
+        "moderate cardiomegaly",
+        "severe cardiomegaly"
+      ],
+      "group": "cardiac_silhouette",
+      "chexpert_projection": "cardiomegaly",
+      "eval_tier": "primary_cxr",
+      "cxr_verifiability": "direct_or_report_verifiable",
+      "notes": "Can be mapped with enlargement_of_the_cardiac_silhouette for CheXpert-compatible projection."
+    },
+    "pneumonia": {
+      "display_name": "pneumonia",
+      "aliases": [
+        "pneumonia",
+        "pneumonic infiltrate",
+        "pneumonic process"
+      ],
+      "group": "airspace_parenchymal",
+      "chexpert_projection": "pneumonia",
+      "eval_tier": "primary_cxr_with_caution",
+      "cxr_verifiability": "radiographic_suspicion_not_clinical_confirmation",
+      "notes": "Keep as evaluation label because it is in CheXpert and dataset answers; interpret as radiographic pneumonia suspicion, not microbiologic proof."
+    },
+    "consolidation": {
+      "display_name": "consolidation",
+      "aliases": [
+        "consolidation",
+        "airspace consolidation",
+        "focal consolidation",
+        "lobar consolidation"
+      ],
+      "group": "airspace_parenchymal",
+      "chexpert_projection": "consolidation",
+      "eval_tier": "primary_cxr",
+      "cxr_verifiability": "direct_or_report_verifiable",
+      "notes": "Overlaps clinically with pneumonia and lung opacity."
+    },
+    "vascular_congestion": {
+      "display_name": "vascular congestion",
+      "aliases": [
+        "vascular congestion",
+        "pulmonary vascular congestion",
+        "vascular engorgement",
+        "cephalization",
+        "pulmonary venous congestion"
+      ],
+      "group": "edema_congestion",
+      "chexpert_projection": "edema",
+      "eval_tier": "primary_cxr_extended",
+      "cxr_verifiability": "direct_or_report_verifiable",
+      "notes": "CheXpert projection is partial; do not collapse to edema for primary ontology."
+    },
+    "pneumothorax": {
+      "display_name": "pneumothorax",
+      "aliases": [
+        "pneumothorax",
+        "ptx",
+        "apical pneumothorax",
+        "right pneumothorax",
+        "left pneumothorax"
+      ],
+      "group": "thoracic_air",
+      "chexpert_projection": "pneumothorax",
+      "eval_tier": "primary_cxr",
+      "cxr_verifiability": "direct_or_report_verifiable",
+      "notes": "Distinct from pneumomediastinum and vague air_collection."
+    },
+    "infection": {
+      "display_name": "infection",
+      "aliases": [
+        "infection",
+        "infectious process",
+        "infectious infiltrate"
+      ],
+      "group": "clinical_diagnosis",
+      "chexpert_projection": "pneumonia",
+      "eval_tier": "mapped_or_auxiliary",
+      "cxr_verifiability": "not_directly_confirmable_on_cxr",
+      "mapping_rule": "Map to pneumonia/consolidation/lung_opacity only when the answer context explicitly ties infection to a radiographic airspace finding; otherwise keep as all31_aux only.",
+      "notes": "Clinical/microbiologic concept; should not be treated as image-confirmed infection."
+    },
+    "calcification": {
+      "display_name": "calcification",
+      "aliases": [
+        "calcification",
+        "calcified",
+        "calcified nodule",
+        "calcified opacity"
+      ],
+      "group": "calcified_granulomatous",
+      "chexpert_projection": null,
+      "eval_tier": "primary_cxr_extended",
+      "cxr_verifiability": "direct_or_report_verifiable",
+      "notes": "CXR-visible but not CheXpert14 exact label."
+    },
+    "fracture": {
+      "display_name": "fracture",
+      "aliases": [
+        "fracture",
+        "rib fracture",
+        "clavicle fracture",
+        "osseous fracture",
+        "bony fracture"
+      ],
+      "group": "bone_spine",
+      "chexpert_projection": "fracture",
+      "eval_tier": "primary_cxr",
+      "cxr_verifiability": "direct_or_report_verifiable",
+      "notes": "CheXpert-compatible."
+    },
+    "emphysema": {
+      "display_name": "emphysema",
+      "aliases": [
+        "emphysema",
+        "hyperinflation",
+        "copd",
+        "emphysematous change"
+      ],
+      "group": "chronic_lung",
+      "chexpert_projection": null,
+      "eval_tier": "primary_cxr_extended",
+      "cxr_verifiability": "direct_or_report_verifiable_with_caution",
+      "notes": "CXR can suggest emphysema/hyperinflation but CT is more sensitive."
+    },
+    "enlargement_of_the_cardiac_silhouette": {
+      "display_name": "enlargement of the cardiac silhouette",
+      "aliases": [
+        "enlargement of the cardiac silhouette",
+        "cardiac silhouette enlargement",
+        "enlarged cardiac silhouette",
+        "enlargement of cardiac silhouette"
+      ],
+      "group": "cardiac_silhouette",
+      "chexpert_projection": "cardiomegaly_or_enlarged_cardiomediastinum",
+      "eval_tier": "primary_cxr",
+      "cxr_verifiability": "direct_or_report_verifiable",
+      "notes": "Primary ontology may keep it separate; CheXpert projection can merge with cardiomegaly/enlarged cardiomediastinum."
+    },
+    "pleural_thickening": {
+      "display_name": "pleural thickening",
+      "aliases": [
+        "pleural thickening",
+        "pleural scarring",
+        "pleural opacity",
+        "pleural other"
+      ],
+      "group": "pleural",
+      "chexpert_projection": "pleural_other",
+      "eval_tier": "primary_cxr_extended",
+      "cxr_verifiability": "direct_or_report_verifiable",
+      "notes": "CheXpert-compatible as partial pleural_other."
+    },
+    "blunting_of_the_costophrenic_angle": {
+      "display_name": "blunting of the costophrenic angle",
+      "aliases": [
+        "blunting of the costophrenic angle",
+        "costophrenic angle blunting",
+        "blunted costophrenic angle",
+        "cp angle blunting",
+        "blunting"
+      ],
+      "group": "pleural",
+      "chexpert_projection": "pleural_effusion_or_pleural_other",
+      "eval_tier": "primary_cxr_extended",
+      "cxr_verifiability": "indirect_cxr_sign",
+      "notes": "May indicate small pleural effusion or pleural scarring; keep separate unless explicit effusion/thickening context is present."
+    },
+    "hernia": {
+      "display_name": "hernia",
+      "aliases": [
+        "hernia",
+        "hiatal hernia",
+        "diaphragmatic hernia"
+      ],
+      "group": "diaphragm_upper_abdominal",
+      "chexpert_projection": null,
+      "eval_tier": "primary_cxr_extended",
+      "cxr_verifiability": "direct_or_report_verifiable_with_caution",
+      "notes": "Often visible as hiatal hernia on CXR; not CheXpert14."
+    },
+    "scoliosis": {
+      "display_name": "scoliosis",
+      "aliases": [
+        "scoliosis",
+        "spinal curvature",
+        "curvature of the spine"
+      ],
+      "group": "bone_spine",
+      "chexpert_projection": null,
+      "eval_tier": "primary_cxr_extended",
+      "cxr_verifiability": "direct_or_report_verifiable",
+      "notes": "CXR-visible structural finding; not CheXpert14."
+    },
+    "heart_failure": {
+      "display_name": "heart failure",
+      "aliases": [
+        "heart failure",
+        "congestive heart failure",
+        "chf"
+      ],
+      "group": "clinical_syndrome",
+      "chexpert_projection": "edema",
+      "eval_tier": "mapped_or_auxiliary",
+      "cxr_verifiability": "not_directly_confirmable_on_cxr",
+      "mapping_rule": "Use as all31_aux. For primary CXR metric, map only explicit imaging components such as edema, vascular_congestion, cardiomegaly, pleural_effusion when stated.",
+      "notes": "Clinical syndrome; CXR can show supportive findings but not definitive heart failure."
+    },
+    "granuloma": {
+      "display_name": "granuloma",
+      "aliases": [
+        "granuloma",
+        "calcified granuloma",
+        "granulomatous disease",
+        "granulomatous change"
+      ],
+      "group": "calcified_granulomatous",
+      "chexpert_projection": null,
+      "eval_tier": "primary_cxr_extended",
+      "cxr_verifiability": "direct_or_report_verifiable_with_caution",
+      "notes": "Often visible if calcified; not CheXpert14."
+    },
+    "pneumomediastinum": {
+      "display_name": "pneumomediastinum",
+      "aliases": [
+        "pneumomediastinum",
+        "mediastinal air",
+        "air in the mediastinum"
+      ],
+      "group": "thoracic_air",
+      "chexpert_projection": null,
+      "eval_tier": "primary_cxr_extended",
+      "cxr_verifiability": "direct_or_report_verifiable",
+      "notes": "CXR-visible thoracic free air label; distinct from pneumothorax."
+    },
+    "air_collection": {
+      "display_name": "air collection",
+      "aliases": [
+        "air collection",
+        "collection of air",
+        "extraluminal air",
+        "free air"
+      ],
+      "group": "thoracic_air",
+      "chexpert_projection": null,
+      "eval_tier": "mapped_or_auxiliary",
+      "cxr_verifiability": "ambiguous_without_location",
+      "mapping_rule": "Map to pneumothorax or pneumomediastinum only if location/context specifies pleural space or mediastinum; otherwise auxiliary only.",
+      "notes": "Vague label."
+    },
+    "hilar_congestion": {
+      "display_name": "hilar congestion",
+      "aliases": [
+        "hilar congestion",
+        "hilar vascular congestion",
+        "hilar engorgement"
+      ],
+      "group": "edema_congestion",
+      "chexpert_projection": "edema",
+      "eval_tier": "primary_cxr_extended",
+      "cxr_verifiability": "direct_or_report_verifiable_with_caution",
+      "notes": "Partial edema/congestion concept; keep separate in primary ontology."
+    },
+    "hematoma": {
+      "display_name": "hematoma",
+      "aliases": [
+        "hematoma",
+        "haematoma",
+        "mediastinal hematoma",
+        "chest wall hematoma"
+      ],
+      "group": "trauma_soft_tissue",
+      "chexpert_projection": null,
+      "eval_tier": "auxiliary_text_only",
+      "cxr_verifiability": "not_reliably_specific_on_plain_cxr",
+      "notes": "Plain CXR may show opacity/mass effect but hematoma-specific diagnosis is usually not reliable."
+    },
+    "contusion": {
+      "display_name": "contusion",
+      "aliases": [
+        "contusion",
+        "pulmonary contusion",
+        "lung contusion"
+      ],
+      "group": "airspace_parenchymal_trauma",
+      "chexpert_projection": "lung_opacity",
+      "eval_tier": "primary_cxr_extended",
+      "cxr_verifiability": "direct_or_report_verifiable_with_clinical_context",
+      "notes": "Can appear as traumatic lung opacity; keep as separate disease-change label if present in GT."
+    },
+    "tortuosity_of_the_thoracic_aorta": {
+      "display_name": "tortuosity of the thoracic aorta",
+      "aliases": [
+        "tortuosity of the thoracic aorta",
+        "tortuous thoracic aorta",
+        "aortic tortuosity",
+        "tortuous aorta"
+      ],
+      "group": "aortic_morphology",
+      "chexpert_projection": null,
+      "eval_tier": "primary_cxr_extended",
+      "cxr_verifiability": "direct_or_report_verifiable",
+      "notes": "CXR-visible morphology finding; not CheXpert14."
+    },
+    "gastric_distention": {
+      "display_name": "gastric distention",
+      "aliases": [
+        "gastric distention",
+        "gastric dilatation",
+        "distended stomach",
+        "stomach distention"
+      ],
+      "group": "diaphragm_upper_abdominal",
+      "chexpert_projection": null,
+      "eval_tier": "auxiliary_text_only",
+      "cxr_verifiability": "visible_but_not_thoracic_disease",
+      "notes": "May be visible on CXR but is outside thoracic disease progression; keep auxiliary unless the task explicitly evaluates incidental upper-abdominal findings."
+    },
+    "hypoxemia": {
+      "display_name": "hypoxemia",
+      "aliases": [
+        "hypoxemia",
+        "hypoxaemia",
+        "low oxygen saturation",
+        "oxygen desaturation"
+      ],
+      "group": "physiologic_state",
+      "chexpert_projection": null,
+      "eval_tier": "excluded_from_image_grounded",
+      "cxr_verifiability": "not_image_verifiable",
+      "notes": "Physiologic/laboratory state; exclude from primary image-grounded CXR evaluation."
+    },
+    "tortuosity_of_the_descending_aorta": {
+      "display_name": "tortuosity of the descending aorta",
+      "aliases": [
+        "tortuosity of the descending aorta",
+        "tortuous descending aorta",
+        "descending aortic tortuosity"
+      ],
+      "group": "aortic_morphology",
+      "chexpert_projection": null,
+      "eval_tier": "primary_cxr_extended",
+      "cxr_verifiability": "direct_or_report_verifiable",
+      "notes": "CXR-visible morphology finding; not CheXpert14."
+    },
+    "hypertensive_heart_disease": {
+      "display_name": "hypertensive heart disease",
+      "aliases": [
+        "hypertensive heart disease",
+        "hypertensive cardiac disease"
+      ],
+      "group": "clinical_diagnosis",
+      "chexpert_projection": "cardiomegaly",
+      "eval_tier": "mapped_or_auxiliary",
+      "cxr_verifiability": "not_directly_confirmable_on_cxr",
+      "mapping_rule": "Do not evaluate as image-confirmed hypertensive heart disease. Map only explicit cardiomegaly/cardiac silhouette enlargement if present.",
+      "notes": "Clinical diagnosis requiring clinical context beyond plain CXR."
+    },
+    "thymoma": {
+      "display_name": "thymoma",
+      "aliases": [
+        "thymoma",
+        "anterior mediastinal thymoma",
+        "thymic tumor",
+        "thymic mass"
+      ],
+      "group": "mediastinal_mass_tumor",
+      "chexpert_projection": null,
+      "eval_tier": "auxiliary_text_only",
+      "cxr_verifiability": "not_definitively_confirmable_on_cxr",
+      "notes": "CXR may suggest mediastinal mass, but thymoma diagnosis usually needs CT/pathology."
+    }
+  },
+  "label_sets": {
+    "all_31": [
+      "atelectasis",
+      "pleural_effusion",
+      "lung_opacity",
+      "edema",
+      "cardiomegaly",
+      "pneumonia",
+      "consolidation",
+      "vascular_congestion",
+      "pneumothorax",
+      "infection",
+      "calcification",
+      "fracture",
+      "emphysema",
+      "enlargement_of_the_cardiac_silhouette",
+      "pleural_thickening",
+      "blunting_of_the_costophrenic_angle",
+      "hernia",
+      "scoliosis",
+      "heart_failure",
+      "granuloma",
+      "pneumomediastinum",
+      "air_collection",
+      "hilar_congestion",
+      "hematoma",
+      "contusion",
+      "tortuosity_of_the_thoracic_aorta",
+      "gastric_distention",
+      "hypoxemia",
+      "tortuosity_of_the_descending_aorta",
+      "hypertensive_heart_disease",
+      "thymoma"
+    ],
+    "primary_cxr": [
+      "atelectasis",
+      "pleural_effusion",
+      "lung_opacity",
+      "edema",
+      "cardiomegaly",
+      "pneumonia",
+      "consolidation",
+      "vascular_congestion",
+      "pneumothorax",
+      "calcification",
+      "fracture",
+      "emphysema",
+      "enlargement_of_the_cardiac_silhouette",
+      "pleural_thickening",
+      "blunting_of_the_costophrenic_angle",
+      "hernia",
+      "scoliosis",
+      "granuloma",
+      "pneumomediastinum",
+      "hilar_congestion",
+      "contusion",
+      "tortuosity_of_the_thoracic_aorta",
+      "tortuosity_of_the_descending_aorta"
+    ],
+    "chexpert_compatible_exact": [
+      "atelectasis",
+      "pleural_effusion",
+      "lung_opacity",
+      "edema",
+      "cardiomegaly",
+      "pneumonia",
+      "consolidation",
+      "pneumothorax",
+      "fracture"
+    ],
+    "chexpert_compatible_partial": [
+      "enlargement_of_the_cardiac_silhouette",
+      "pleural_thickening",
+      "blunting_of_the_costophrenic_angle",
+      "vascular_congestion",
+      "hilar_congestion",
+      "contusion"
+    ],
+    "mapped_or_auxiliary": [
+      "infection",
+      "heart_failure",
+      "air_collection",
+      "hypertensive_heart_disease"
+    ],
+    "auxiliary_text_only": [
+      "hematoma",
+      "gastric_distention",
+      "thymoma"
+    ],
+    "excluded_from_image_grounded": [
+      "hypoxemia"
+    ],
+    "not_disease_but_trackable_optional": [
+      "support_devices",
+      "no_finding"
+    ]
+  },
+  "alias_to_canonical": {
+    "atelectasis": "atelectasis",
+    "subsegmental atelectasis": "atelectasis",
+    "linear atelectasis": "atelectasis",
+    "basilar atelectasis": "atelectasis",
+    "bibasilar atelectasis": "atelectasis",
+    "pleural effusion": "pleural_effusion",
+    "effusion": "pleural_effusion",
+    "pleural fluid": "pleural_effusion",
+    "fluid in pleural space": "pleural_effusion",
+    "lung opacity": "lung_opacity",
+    "pulmonary opacity": "lung_opacity",
+    "airspace opacity": "lung_opacity",
+    "parenchymal opacity": "lung_opacity",
+    "opacity": "lung_opacity",
+    "opacification": "lung_opacity",
+    "infiltrate": "lung_opacity",
+    "pulmonary infiltrate": "lung_opacity",
+    "edema": "edema",
+    "pulmonary edema": "edema",
+    "interstitial edema": "edema",
+    "alveolar edema": "edema",
+    "cardiomegaly": "cardiomegaly",
+    "enlarged heart": "cardiomegaly",
+    "cardiac enlargement": "cardiomegaly",
+    "mild cardiomegaly": "cardiomegaly",
+    "moderate cardiomegaly": "cardiomegaly",
+    "severe cardiomegaly": "cardiomegaly",
+    "pneumonia": "pneumonia",
+    "pneumonic infiltrate": "pneumonia",
+    "pneumonic process": "pneumonia",
+    "consolidation": "consolidation",
+    "airspace consolidation": "consolidation",
+    "focal consolidation": "consolidation",
+    "lobar consolidation": "consolidation",
+    "vascular congestion": "vascular_congestion",
+    "pulmonary vascular congestion": "vascular_congestion",
+    "vascular engorgement": "vascular_congestion",
+    "cephalization": "vascular_congestion",
+    "pulmonary venous congestion": "vascular_congestion",
+    "pneumothorax": "pneumothorax",
+    "ptx": "pneumothorax",
+    "apical pneumothorax": "pneumothorax",
+    "right pneumothorax": "pneumothorax",
+    "left pneumothorax": "pneumothorax",
+    "infection": "infection",
+    "infectious process": "infection",
+    "infectious infiltrate": "infection",
+    "calcification": "calcification",
+    "calcified": "calcification",
+    "calcified granuloma": "granuloma",
+    "calcified nodule": "calcification",
+    "calcified opacity": "calcification",
+    "fracture": "fracture",
+    "rib fracture": "fracture",
+    "clavicle fracture": "fracture",
+    "osseous fracture": "fracture",
+    "bony fracture": "fracture",
+    "emphysema": "emphysema",
+    "hyperinflation": "emphysema",
+    "copd": "emphysema",
+    "emphysematous change": "emphysema",
+    "enlargement of the cardiac silhouette": "enlargement_of_the_cardiac_silhouette",
+    "cardiac silhouette enlargement": "enlargement_of_the_cardiac_silhouette",
+    "enlarged cardiac silhouette": "enlargement_of_the_cardiac_silhouette",
+    "enlargement of cardiac silhouette": "enlargement_of_the_cardiac_silhouette",
+    "pleural thickening": "pleural_thickening",
+    "pleural scarring": "pleural_thickening",
+    "pleural opacity": "pleural_thickening",
+    "pleural other": "pleural_thickening",
+    "blunting of the costophrenic angle": "blunting_of_the_costophrenic_angle",
+    "costophrenic angle blunting": "blunting_of_the_costophrenic_angle",
+    "blunted costophrenic angle": "blunting_of_the_costophrenic_angle",
+    "cp angle blunting": "blunting_of_the_costophrenic_angle",
+    "blunting": "blunting_of_the_costophrenic_angle",
+    "hernia": "hernia",
+    "hiatal hernia": "hernia",
+    "diaphragmatic hernia": "hernia",
+    "scoliosis": "scoliosis",
+    "spinal curvature": "scoliosis",
+    "curvature of the spine": "scoliosis",
+    "heart failure": "heart_failure",
+    "congestive heart failure": "heart_failure",
+    "chf": "heart_failure",
+    "granuloma": "granuloma",
+    "granulomatous disease": "granuloma",
+    "granulomatous change": "granuloma",
+    "pneumomediastinum": "pneumomediastinum",
+    "mediastinal air": "pneumomediastinum",
+    "air in the mediastinum": "pneumomediastinum",
+    "air collection": "air_collection",
+    "collection of air": "air_collection",
+    "extraluminal air": "air_collection",
+    "free air": "air_collection",
+    "hilar congestion": "hilar_congestion",
+    "hilar vascular congestion": "hilar_congestion",
+    "hilar engorgement": "hilar_congestion",
+    "hematoma": "hematoma",
+    "haematoma": "hematoma",
+    "mediastinal hematoma": "hematoma",
+    "chest wall hematoma": "hematoma",
+    "contusion": "contusion",
+    "pulmonary contusion": "contusion",
+    "lung contusion": "contusion",
+    "tortuosity of the thoracic aorta": "tortuosity_of_the_thoracic_aorta",
+    "tortuous thoracic aorta": "tortuosity_of_the_thoracic_aorta",
+    "aortic tortuosity": "tortuosity_of_the_thoracic_aorta",
+    "tortuous aorta": "tortuosity_of_the_thoracic_aorta",
+    "gastric distention": "gastric_distention",
+    "gastric dilatation": "gastric_distention",
+    "distended stomach": "gastric_distention",
+    "stomach distention": "gastric_distention",
+    "hypoxemia": "hypoxemia",
+    "hypoxaemia": "hypoxemia",
+    "low oxygen saturation": "hypoxemia",
+    "oxygen desaturation": "hypoxemia",
+    "tortuosity of the descending aorta": "tortuosity_of_the_descending_aorta",
+    "tortuous descending aorta": "tortuosity_of_the_descending_aorta",
+    "descending aortic tortuosity": "tortuosity_of_the_descending_aorta",
+    "hypertensive heart disease": "hypertensive_heart_disease",
+    "hypertensive cardiac disease": "hypertensive_heart_disease",
+    "thymoma": "thymoma",
+    "anterior mediastinal thymoma": "thymoma",
+    "thymic tumor": "thymoma",
+    "thymic mass": "thymoma"
+  },
+  "hierarchy": {
+    "parent_child": {
+      "lung_opacity": [
+        "atelectasis",
+        "consolidation",
+        "pneumonia",
+        "edema",
+        "contusion"
+      ],
+      "pleural_abnormality": [
+        "pleural_effusion",
+        "pleural_thickening",
+        "blunting_of_the_costophrenic_angle"
+      ],
+      "cardiac_silhouette_abnormality": [
+        "cardiomegaly",
+        "enlargement_of_the_cardiac_silhouette"
+      ],
+      "thoracic_air": [
+        "pneumothorax",
+        "pneumomediastinum",
+        "air_collection"
+      ],
+      "edema_congestion": [
+        "edema",
+        "vascular_congestion",
+        "hilar_congestion",
+        "heart_failure"
+      ],
+      "calcified_granulomatous": [
+        "calcification",
+        "granuloma"
+      ],
+      "aortic_tortuosity": [
+        "tortuosity_of_the_thoracic_aorta",
+        "tortuosity_of_the_descending_aorta"
+      ]
+    },
+    "partial_match_weights": {
+      "exact_or_synonym": 1,
+      "chexpert_projection_equivalent": 0.8,
+      "parent_child_same_transition": 0.5,
+      "same_group_same_transition": 0.25,
+      "same_entity_opposite_presence_transition": 0,
+      "same_entity_opposite_severity_transition": 0,
+      "unrelated": 0
+    },
+    "one_to_one_matching_required": true,
+    "prevent_parent_double_credit": true
+  },
+  "transitions": {
+    "presence_transition": {
+      "NEW": {
+        "definition": "Finding is present in main/current/follow-up and absent or not described in reference/baseline.",
+        "positive_patterns": [
+          "additional finding",
+          "additional findings",
+          "new",
+          "newly",
+          "interval development",
+          "developed",
+          "appeared",
+          "increased presence",
+          "now seen"
+        ],
+        "negative_patterns": [
+          "no new",
+          "not new",
+          "without new",
+          "no additional",
+          "not additional",
+          "without additional"
+        ],
+        "template_patterns": [
+          "the main image has an additional finding of {entities} than the reference image",
+          "the main image has additional findings of {entities} than the reference image"
+        ]
+      },
+      "RESOLVED": {
+        "definition": "Finding was present in reference/baseline and is absent/missing/resolved in main/current/follow-up.",
+        "positive_patterns": [
+          "missing the finding",
+          "missing the findings",
+          "resolved",
+          "no longer seen",
+          "disappeared",
+          "cleared",
+          "interval resolution",
+          "removed"
+        ],
+        "negative_patterns": [
+          "partially resolved"
+        ],
+        "template_patterns": [
+          "the main image is missing the finding of {entities} than the reference image",
+          "the main image is missing the findings of {entities} than the reference image"
+        ]
+      },
+      "PRESENT_BOTH": {
+        "definition": "Finding is present at both time points. In Change-Presence evaluation, IMPROVED, WORSENED, SAME_LEVEL, persistent, and unchanged disease are all projected here.",
+        "positive_patterns": [
+          "persistent",
+          "again seen",
+          "redemonstrated",
+          "present in both",
+          "unchanged",
+          "stable",
+          "similar",
+          "improved",
+          "worsened",
+          "increased",
+          "decreased",
+          "level has changed"
+        ],
+        "projection_sources": [
+          "WORSENED",
+          "IMPROVED",
+          "SAME_LEVEL",
+          "LEVEL_CHANGED_UNSPECIFIED"
+        ]
+      },
+      "ABSENT_BOTH": {
+        "definition": "Finding is absent at both time points. Usually relevant to presence questions, not generic change answers.",
+        "positive_patterns": [
+          "no evidence of",
+          "absent",
+          "not seen",
+          "without"
+        ],
+        "use_rule": "Do not infer RESOLVED from a non-comparative 'no X' phrase unless comparative wording is explicit."
+      },
+      "GLOBAL_NO_CHANGE": {
+        "definition": "Answer states no relevant change overall; do not expand to all 31 diseases as UNCHANGED.",
+        "positive_patterns": [
+          "nothing has changed",
+          "no significant change",
+          "no interval change"
+        ],
+        "template_patterns": [
+          "nothing has changed"
+        ]
+      },
+      "UNKNOWN": {
+        "definition": "Direction cannot be determined from answer text."
+      }
+    },
+    "severity_transition": {
+      "WORSENED": {
+        "definition": "Disease remains present and severity/size/extent increased.",
+        "positive_patterns": [
+          "worsened",
+          "worse",
+          "increased",
+          "larger",
+          "progressed",
+          "more severe",
+          "greater",
+          "from mild to moderate",
+          "from small to large"
+        ]
+      },
+      "IMPROVED": {
+        "definition": "Disease remains present and severity/size/extent decreased.",
+        "positive_patterns": [
+          "improved",
+          "decreased",
+          "smaller",
+          "less",
+          "less severe",
+          "partially resolved",
+          "from moderate to mild",
+          "from large to small"
+        ]
+      },
+      "SAME_LEVEL": {
+        "definition": "Disease remains present and severity is stable/unchanged.",
+        "positive_patterns": [
+          "unchanged",
+          "stable",
+          "similar",
+          "same level",
+          "no change in level"
+        ]
+      },
+      "LEVEL_CHANGED_UNSPECIFIED": {
+        "definition": "A level change is claimed, but direction cannot be computed reliably.",
+        "positive_patterns": [
+          "level has changed",
+          "changed in severity"
+        ]
+      },
+      "NOT_APPLICABLE": {
+        "definition": "Used for NEW/RESOLVED claims where ordinal severity comparison is not requested or not meaningful."
+      },
+      "UNKNOWN": {
+        "definition": "Severity direction cannot be determined."
+      }
+    }
+  },
+  "severity_lexicon": {
+    "ordinal_scale": {
+      "none": 0,
+      "trace": 1,
+      "minimal": 1,
+      "minimally": 1,
+      "subtle": 1,
+      "small": 2,
+      "mild": 2,
+      "mildly": 2,
+      "mild_to_moderate": 2.5,
+      "small_moderate": 2.5,
+      "moderate_small": 2.5,
+      "moderate": 3,
+      "moderately": 3,
+      "moderate_to_large": 3.5,
+      "moderate_to_severe": 4,
+      "moderately_severe": 4,
+      "large": 4,
+      "severe": 5,
+      "massive": 5
+    },
+    "normalization_replacements": {
+      "mild to moderate": "mild_to_moderate",
+      "mild-moderate": "mild_to_moderate",
+      "small moderate": "small_moderate",
+      "moderate small": "moderate_small",
+      "moderate to large": "moderate_to_large",
+      "moderate to severe": "moderate_to_severe",
+      "moderately severe": "moderately_severe"
+    },
+    "direction_keywords": {
+      "increasing": "WORSENED",
+      "increase": "WORSENED",
+      "worsening": "WORSENED",
+      "decreasing": "IMPROVED",
+      "decrease": "IMPROVED",
+      "improving": "IMPROVED"
+    },
+    "direction_from_ordinal_rule": "If both reference_level and main_level normalize to ordinal numbers: main > reference -> WORSENED; main < reference -> IMPROVED; equal -> SAME_LEVEL. If not comparable but directional keyword exists, use keyword. Otherwise LEVEL_CHANGED_UNSPECIFIED.",
+    "messy_level_handling": "For strings containing multiple severity tokens, use the maximum ordinal token for conservative severity, and store raw value for Level-Value evaluation."
+  },
+  "question_types": {
+    "difference": {
+      "patterns": [
+        "what has changed",
+        "what changes",
+        "what is changed",
+        "what changed"
+      ],
+      "primary_profile": "change_presence_f1",
+      "requested_axes": [
+        "entity",
+        "presence_transition"
+      ],
+      "scope_rule": "If question contains an anatomic area, attach that scope to extracted claims unless answer explicitly specifies a different location."
+    },
+    "level": {
+      "patterns": [
+        "what level",
+        "how severe",
+        "has the level",
+        "improved or worsened",
+        "worsened or improved",
+        "worse or better",
+        "better or worse",
+        "severity"
+      ],
+      "primary_profile": "level_direction_f1",
+      "requested_axes": [
+        "entity",
+        "severity_transition",
+        "level_value_optional"
+      ],
+      "scope_rule": "If entity appears in question and answer only gives a level, inherit entity from question."
+    },
+    "presence": {
+      "patterns": [
+        "is there",
+        "is there evidence",
+        "does this image show",
+        "are there"
+      ],
+      "primary_profile": "current_presence_accuracy",
+      "requested_axes": [
+        "entity",
+        "current_presence"
+      ],
+      "scope_rule": "Do not infer longitudinal transition from simple yes/no unless question explicitly compares current and reference."
+    },
+    "location": {
+      "patterns": [
+        "where",
+        "where in the image",
+        "which area",
+        "which lung area"
+      ],
+      "primary_profile": "location_f1",
+      "requested_axes": [
+        "entity",
+        "location"
+      ],
+      "scope_rule": "If disease entity is in question and answer is only an anatomy phrase, inherit entity from question."
+    },
+    "abnormality": {
+      "patterns": [
+        "what abnormality",
+        "what thoracic pathologies",
+        "what findings"
+      ],
+      "primary_profile": "entity_f1",
+      "requested_axes": [
+        "entity"
+      ]
+    },
+    "type": {
+      "patterns": [
+        "what type"
+      ],
+      "primary_profile": "attribute_f1",
+      "implemented": false,
+      "requested_axes": [
+        "entity",
+        "attribute_type"
+      ]
+    },
+    "view": {
+      "patterns": [
+        "which view",
+        "what view"
+      ],
+      "primary_profile": "view_accuracy",
+      "implemented": false,
+      "requested_axes": [
+        "view"
+      ],
+      "disease_eval": false
+    }
+  },
+  "question_routing": {
+    "precedence": [
+      "level",
+      "difference",
+      "presence",
+      "location",
+      "abnormality",
+      "type",
+      "view"
+    ],
+    "location_conditioned_difference": {
+      "enabled": true,
+      "result_question_type": "level",
+      "broad_difference_patterns": [
+        "what has changed",
+        "what changes",
+        "what is changed",
+        "what changed"
+      ],
+      "location_cues": [
+        "left",
+        "right",
+        "bilateral",
+        "bibasilar",
+        "basilar",
+        "upper",
+        "middle",
+        "mid",
+        "lower",
+        "apical",
+        "apex",
+        "hilar",
+        "lung area",
+        "area"
+      ],
+      "rationale": "Project-specific routing decision: an anatomic scope in a broad change question requests localized level direction."
+    }
+  },
+  "claim_schema": {
+    "claim_id": "string",
+    "entity": "canonical disease id from labels or null for global_no_change/view-only claims",
+    "entity_raw": "surface text span",
+    "entity_source": "answer|question|chexpert_column|llm_extractor",
+    "eval_tier": "primary_cxr|primary_cxr_with_caution|primary_cxr_extended|mapped_or_auxiliary|auxiliary_text_only|excluded_from_image_grounded",
+    "presence_transition": "NEW|RESOLVED|PRESENT_BOTH|ABSENT_BOTH|GLOBAL_NO_CHANGE|UNKNOWN|NOT_APPLICABLE",
+    "severity_transition": "WORSENED|IMPROVED|SAME_LEVEL|LEVEL_CHANGED_UNSPECIFIED|NOT_APPLICABLE|UNKNOWN",
+    "current_presence": "PRESENT|ABSENT|UNCERTAIN|NOT_MENTIONED|UNKNOWN",
+    "reference_presence": "PRESENT|ABSENT|UNCERTAIN|NOT_MENTIONED|UNKNOWN",
+    "level": {
+      "reference_raw": "string|null",
+      "current_raw": "string|null",
+      "reference_normalized": "string|null",
+      "current_normalized": "string|null",
+      "reference_ordinal": "number|null",
+      "current_ordinal": "number|null"
+    },
+    "location": {
+      "raw": "string|null",
+      "side": "left|right|bilateral|midline|unknown|null",
+      "region": "string|null",
+      "source": "answer|question_scope|inferred|null"
+    },
+    "certainty": "definite|probable|possible|uncertain|negated|unknown",
+    "assertion_type": "comparative_transition|current_state|reference_state|global_change|attribute_answer",
+    "source_sentence": "string",
+    "direction_source": "explicit_phrase|level_ordinal|level_keyword|question_inherited|chexpert_code|unknown",
+    "extractor": "rule_based|llm|hybrid|chexpert_column",
+    "extractor_confidence": "number between 0 and 1",
+    "flags": [
+      "string"
+    ]
+  },
+  "parser_patterns": {
+    "sentence_split": "split on period followed by whitespace; preserve source sentence",
+    "new_clause_regex": "the main image has (?:an? )?additional findings? of (?P<entities>.+?)(?: than the reference image)?$",
+    "resolved_clause_regex": "the main image is missing the findings? of (?P<entities>.+?)(?: than the reference image)?$",
+    "level_clause_regex": "the level of (?P<entity>.+?) has changed from (?P<reference_level>.+?) to (?P<current_level>.+)$",
+    "global_no_change_regex": "^(nothing has changed|no significant change|no interval change)\\.?$",
+    "entity_list_split_regex": ",\\s*|\\s+and\\s+",
+    "malformed_span_recovery": "After list splitting, run longest-first alias matching inside each segment; this recovers malformed spans such as 'and pneumonia lung opacity'."
+  },
+  "evaluation_profiles": {
+    "change_presence_f1": {
+      "applies_to_question_types": [
+        "difference"
+      ],
+      "primary_tuple": [
+        "entity",
+        "presence_transition"
+      ],
+      "projection": {
+        "NEW": "NEW",
+        "RESOLVED": "RESOLVED",
+        "PRESENT_BOTH": "PRESENT_BOTH",
+        "WORSENED": "PRESENT_BOTH",
+        "IMPROVED": "PRESENT_BOTH",
+        "SAME_LEVEL": "PRESENT_BOTH",
+        "LEVEL_CHANGED_UNSPECIFIED": "PRESENT_BOTH"
+      },
+      "scored_values": [
+        "NEW",
+        "RESOLVED",
+        "PRESENT_BOTH"
+      ],
+      "do_not_score_axes": [
+        "severity_transition",
+        "level_value"
+      ],
+      "safety_metrics": [
+        "explicit_severity_contradiction_rate",
+        "presence_transition_contradiction_rate",
+        "hallucinated_change_rate",
+        "omission_rate",
+        "global_no_change_error_rate"
+      ],
+      "special_rules": [
+        "A level-change clause in a generic change answer becomes PRESENT_BOTH for the primary score.",
+        "If generated answer explicitly says WORSENED when GT explicitly says IMPROVED for the same entity, primary Change-Presence may match as PRESENT_BOTH, but explicit_severity_contradiction_rate increments.",
+        "Do not expand GLOBAL_NO_CHANGE to all diseases."
+      ]
+    },
+    "level_direction_f1": {
+      "applies_to_question_types": [
+        "level"
+      ],
+      "primary_tuple": [
+        "entity",
+        "severity_transition"
+      ],
+      "scored_values": [
+        "WORSENED",
+        "IMPROVED",
+        "SAME_LEVEL",
+        "LEVEL_CHANGED_UNSPECIFIED"
+      ],
+      "include_presence_requirement": "PRESENT_BOTH is assumed for IMPROVED/WORSENED/SAME_LEVEL unless evidence says otherwise.",
+      "secondary_metrics": [
+        "level_value_exact_accuracy",
+        "level_ordinal_distance",
+        "entity_f1"
+      ],
+      "special_rules": [
+        "If answer only gives a level word and disease is in question, inherit entity from question.",
+        "If both reference and current levels are present, compute direction via severity_lexicon."
+      ]
+    },
+    "current_presence_accuracy": {
+      "applies_to_question_types": [
+        "presence"
+      ],
+      "primary_tuple": [
+        "entity",
+        "current_presence"
+      ],
+      "special_rules": [
+        "Yes/No answers are converted to PRESENT/ABSENT for the entity in the question."
+      ]
+    },
+    "location_f1": {
+      "applies_to_question_types": [
+        "location"
+      ],
+      "primary_tuple": [
+        "entity",
+        "location.side",
+        "location.region"
+      ],
+      "allow_question_entity_inheritance": true
+    },
+    "entity_f1": {
+      "applies_to_question_types": [
+        "abnormality",
+        "difference",
+        "level",
+        "presence",
+        "location"
+      ],
+      "primary_tuple": [
+        "entity"
+      ],
+      "role": "secondary_or_diagnostic"
+    },
+    "cxr_primary_ontology_f1": {
+      "label_filter": "label_sets.primary_cxr",
+      "role": "main image-grounded clinical metric"
+    },
+    "all31_auxiliary_f1": {
+      "label_filter": "label_sets.all_31",
+      "role": "answer-text consistency metric; do not claim all labels are directly image-verifiable"
+    },
+    "chexpert_projected_change_f1": {
+      "label_filter": "label_sets.chexpert_compatible_exact + label_sets.chexpert_compatible_partial",
+      "projection_field": "chexpert_projection",
+      "role": "comparison with CheXpert-style prior work"
+    }
+  },
+  "matching_policy": {
+    "set_or_multiset": "Use set matching for duplicate-free disease-transition claims. Use multiset only if location-specific duplicate claims are intentionally scored.",
+    "exact_match": "Same canonical entity and same projected transition.",
+    "hierarchical_match": "Maximum bipartite matching with hierarchy.partial_match_weights; one prediction can match at most one GT claim.",
+    "macro_micro": [
+      "micro_f1_over_claims",
+      "macro_f1_over_labels",
+      "macro_f1_over_question_types"
+    ],
+    "hard_contradictions": {
+      "presence": [
+        [
+          "NEW",
+          "RESOLVED"
+        ]
+      ],
+      "severity": [
+        [
+          "WORSENED",
+          "IMPROVED"
+        ]
+      ],
+      "global": {
+        "denominator": "gold_global_or_nonempty_primary",
+        "gold_global_vs_pred_nonempty": true,
+        "gold_nonempty_vs_pred_global": true
+      }
+    },
+    "soft_errors": {
+      "new_vs_present_both": "same entity but prior-state distinction wrong",
+      "resolved_vs_present_both": "same entity but current-state distinction wrong",
+      "entity_only_match_without_transition": "entity recognized but transition missing; count only in Entity-F1, not primary Change-Presence F1"
+    }
+  },
+  "chexpert_wide_encoding": {
+    "caveat": "Mapping is inferred from inspected CSV examples and should be validated against the dataset generation code before being used as ground truth.",
+    "columns": [
+      "no_finding",
+      "enlarged_cardiomediastinum",
+      "cardiomegaly",
+      "lung_opacity",
+      "lung_lesion",
+      "edema",
+      "consolidation",
+      "pneumonia",
+      "atelectasis",
+      "pneumothorax",
+      "pleural_effusion",
+      "pleural_other",
+      "fracture",
+      "support_devices"
+    ],
+    "code_map": {
+      "0": "NO_TRANSITION_OR_NOT_MENTIONED",
+      "1": "NEW_OR_CURRENT_ONLY",
+      "2": "RESOLVED_OR_REFERENCE_ONLY",
+      "3": "WORSENED_OR_LEVEL_INCREASE",
+      "4": "IMPROVED_OR_LEVEL_DECREASE",
+      "5": "PRESENT_BOTH_OR_STABLE_BOTH"
+    },
+    "recommended_use": "Use for CheXpert-projected auxiliary evaluation and sanity checks. Do not use as the sole primary GT for 31-label answer-text evaluation because CheXpert columns may include report-level transitions not verbalized in the GT answer."
+  }
+}

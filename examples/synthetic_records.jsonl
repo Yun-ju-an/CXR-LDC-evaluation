@@ -1,0 +1,6 @@
+{"id":"no-change","question":"what has changed compared to the reference image?","prediction":"nothing has changed","reference":"nothing has changed"}
+{"id":"new","question":"what has changed compared to the reference image?","prediction":"the main image has an additional finding of edema than the reference image","reference":"the main image has an additional finding of edema than the reference image"}
+{"id":"resolved","question":"what has changed compared to the reference image?","prediction":"the main image is missing the finding of pleural effusion than the reference image","reference":"the main image is missing the finding of pleural effusion than the reference image"}
+{"id":"broad-level","question":"what has changed compared to the reference image?","prediction":"the level of cardiomegaly has changed from mild to moderate","reference":"the level of cardiomegaly has changed from mild to moderate"}
+{"id":"left-level","question":"what has changed in the left lung area?","prediction":"the level of pleural effusion has changed from small to large","reference":"the level of pleural effusion has changed from small to large"}
+{"id":"right-level","question":"what has changed in the right lung area?","prediction":"the level of lung opacity has changed from moderate to mild","reference":"the level of lung opacity has changed from moderate to mild"}
