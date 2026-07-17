@@ -2,8 +2,6 @@
 
 CXR LDC Eval is a deterministic, configuration-driven implementation of Longitudinal Disease-Change (LDC) evaluation for chest X-ray VQA answers. It compares generated answer text with reference answer text after converting both into normalized disease-change claims.
 
-> Distribution status: release candidate. This extracted folder intentionally has no open-source license yet. Do not publish or redistribute it until the code/config provenance is cleared and an authorized rights holder selects a license; see [LICENSE_SELECTION_REQUIRED.md](LICENSE_SELECTION_REQUIRED.md).
-
 ## What is included
 
 - CPU-only, Python standard-library evaluation code
@@ -131,3 +129,7 @@ This metric evaluates agreement between answer texts; it does not verify image g
 - [CHANGELOG.md](CHANGELOG.md)
 - [CONTRIBUTING.md](CONTRIBUTING.md)
 - [CITATION.cff.template](CITATION.cff.template)
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE).

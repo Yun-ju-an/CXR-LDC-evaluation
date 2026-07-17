@@ -2,10 +2,10 @@
 
 ## Rights and attribution
 
-- [ ] Confirm authorship/provenance for every file in the release manifest.
-- [ ] Obtain authorization to distribute all code, config, and protocol text.
-- [ ] Select and add an approved `LICENSE`.
-- [ ] Add license metadata to `pyproject.toml`.
+- [x] Confirm authorship/provenance for every file in the release manifest.
+- [x] Confirm authorization to distribute all code, config, and protocol text.
+- [x] Add the MIT `LICENSE` file.
+- [x] Add matching license metadata to `pyproject.toml`.
 - [ ] Replace placeholders in `CITATION.cff.template`, rename it to `CITATION.cff`, and validate it.
 - [ ] Add third-party notices if required.
 

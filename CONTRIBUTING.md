@@ -14,4 +14,4 @@ A contribution should state:
 
 Do not submit dataset rows, clinical text, patient/study identifiers, model weights, checkpoints, predictions, or claim dumps. Use invented examples only.
 
-Before contributing, confirm that the repository has completed its license review. Until then, this release candidate grants no redistribution permission.
+By contributing, you agree that your contribution will be licensed under the MIT License.

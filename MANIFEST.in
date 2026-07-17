@@ -1,7 +1,7 @@
 include README.md
 include CHANGELOG.md
 include CONTRIBUTING.md
-include LICENSE_SELECTION_REQUIRED.md
+include LICENSE
 include PUBLIC_RELEASE_MANIFEST.md
 include PUBLISHING_CHECKLIST.md
 include CITATION.cff.template

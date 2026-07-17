@@ -31,6 +31,6 @@ The recommended public interface is the generic `records` command. The `legacy` 
 
 Summary JSON and Markdown contain aggregate metrics, `<provided>` path markers, and SHA-256 digests. Claims JSON is disabled by default; opt-in `--write-claims` contains source question/reference/prediction text and is excluded from public release review.
 
-## Release blocker
+## License
 
-No public distribution is authorized until [LICENSE_SELECTION_REQUIRED.md](LICENSE_SELECTION_REQUIRED.md) is resolved.
+The code, configuration, and documentation in this release are licensed under the MIT License. See [LICENSE](LICENSE).

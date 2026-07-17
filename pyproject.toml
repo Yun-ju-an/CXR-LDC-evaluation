@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61"]
+requires = ["setuptools>=77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,6 +7,8 @@ name = "cxr-ldc-eval"
 version = "0.1.1"
 description = "Config-driven longitudinal disease-change evaluation for chest X-ray VQA answers"
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.9"
 dependencies = []
 keywords = ["medical-vqa", "chest-xray", "longitudinal", "evaluation"]
